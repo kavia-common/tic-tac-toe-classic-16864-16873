@@ -1,16 +1,12 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from .app import get_app
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# PUBLIC_INTERFACE
+def app_factory() -> FastAPI:
+    """Return the configured FastAPI app (for ASGI servers)."""
+    return get_app()
 
-@app.get("/")
-def health_check():
-    return {"message": "Healthy"}
+
+# Instantiate for uvicorn discovery: `uvicorn src.api.main:app`
+app = get_app()
